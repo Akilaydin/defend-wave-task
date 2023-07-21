@@ -2,7 +2,7 @@
 using UnityEditor;
 using UnityEngine;
 
-namespace Catris
+namespace OriGames
 {
 	[InitializeOnLoad]
 	internal class AutoRunIDE
