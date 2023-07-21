@@ -2,11 +2,10 @@
   "dependencies": {
     "com.madsbangh.easybuttons": "https://github.com/madsbangh/EasyButtons.git#upm",
     "com.origames.com.origames.extensions": "https://github.com/Akilaydin/OriGamesExtensions.git",
-    "com.unity.ai.navigation": "1.1.3",
-    "com.unity.cinemachine": "2.9.5",
+    "com.unity.cinemachine": "2.9.7",
     "com.unity.editorcoroutines": "1.0.0",
     "com.unity.feature.2d": "1.0.0",
-    "com.unity.ide.rider": "3.0.21",
+    "com.unity.ide.rider": "3.0.24",
     "com.unity.nuget.mono-cecil": "1.11.4",
     "com.unity.textmeshpro": "3.0.6",
     "com.unity.ugui": "1.0.0",
