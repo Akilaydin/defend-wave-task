@@ -12,3 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ad5c669f27b748c4a5e641d17475a21b, type: 3}
   m_Name: GlobalGameSettings
   m_EditorClassIdentifier: 
+  <EnemiesToDefeatCount>k__BackingField: {x: 10, y: 20}
+  <EnemiesSpawnCooldown>k__BackingField: {x: 0.65, y: 2}
+  <DefaultEnemiesSettings>k__BackingField:
+    <Speed>k__BackingField: {x: 1, y: 99.9}
+    <Health>k__BackingField: 3
+    <DamageOnLeak>k__BackingField: 1

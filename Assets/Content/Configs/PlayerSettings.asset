@@ -17,3 +17,8 @@ MonoBehaviour:
     m_SubObjectName: 
     m_SubObjectType: 
     m_EditorAssetChanged: 0
+  <BlastRadius>k__BackingField: 1
+  <RateOfFire>k__BackingField: 0.25
+  <Damage>k__BackingField: 1
+  <ProjectileSpeed>k__BackingField: 1
+  <PlayerSpeed>k__BackingField: 1

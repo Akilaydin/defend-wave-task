@@ -1,28 +1,19 @@
-﻿using DefendTheWave.Common;
+﻿using System;
 
 using UnityEngine;
 
 namespace DefendTheWave.Settings
 {
-	[CreateAssetMenu(fileName = nameof(EnemySettings), menuName = GameConstants.ScriptableObjectsRoot + nameof(EnemySettings), order = 0)]
-	public class EnemySettings : BaseSpawnableEntitySettings
+	[Serializable]
+	public class EnemySettings : ICloneable
 	{
-		[Space]
-		[SerializeField] private bool _overrideGlobalGameSettings;
-		
-		private void OnValidate()
-		{
-			if (_overrideGlobalGameSettings == true)
-			{
-				return;
-			}
-			
-			SetGlobalSettingsAsCurrent();
+		[field: SerializeField, MinMaxSlider(1f, 99.9f)] public Vector2 Speed { get; private set; } = new(5f, 10f);
+		[field: SerializeField] public int Health { get; private set; } = 3;
+		[field: SerializeField] public int DamageOnLeak { get; private set; } = 1; //note: В ТЗ зашито 1, но решил дать возможность настройки
 
-			void SetGlobalSettingsAsCurrent()
-			{
-				
-			}
+		public object Clone()
+		{
+			return (EnemySettings) MemberwiseClone();
 		}
 	}
 }
