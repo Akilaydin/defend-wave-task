@@ -9,6 +9,7 @@ namespace DefendTheWave.Common.Services
 	public class ScreenBoundsProvider : IInitializable
 	{
 		private readonly Camera _levelCamera;
+		
 		private Bounds _screenBounds;
 
 		public ScreenBoundsProvider(LevelSceneData levelSceneData)

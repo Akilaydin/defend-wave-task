@@ -1,23 +1,20 @@
-﻿using VContainer;
+﻿using DefendTheWave.Common;
+using DefendTheWave.Common.Services;
+using DefendTheWave.Input;
+
+using VContainer;
 using VContainer.Unity;
 
 namespace DefendTheWave.GameLifetime
 {
 	public class BootstrapLifetimeScope : LifetimeScope
 	{
-		private LifetimeScope _levelLifetimeScope;
-		
 		protected override void Configure(IContainerBuilder builder)
 		{
-			_levelLifetimeScope = CreateLevelLifetimeScope();
-				
-			LifetimeScope CreateLevelLifetimeScope()
-			{
-				return CreateChild(levelScopeBuilder =>
-				{
-					
-				});
-			}
+			builder.Register<KeyboardInputService>(Lifetime.Singleton).AsImplementedInterfaces();
+			
+			builder.Register<ScreenBoundsProvider>(Lifetime.Singleton).AsSelf();
+			builder.Register<ClampedPositionProvider>(Lifetime.Singleton).AsSelf();
 		}
 	}
 }
