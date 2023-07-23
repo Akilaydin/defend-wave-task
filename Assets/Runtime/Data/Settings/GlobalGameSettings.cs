@@ -2,7 +2,7 @@
 
 using UnityEngine;
 
-namespace DefendTheWave.Settings
+namespace DefendTheWave.Data.Settings
 {
 	[CreateAssetMenu(fileName = nameof(GlobalGameSettings), menuName = GameConstants.ScriptableObjectsRoot + nameof(GlobalGameSettings), order = 0)]
 	public class GlobalGameSettings : ScriptableObject

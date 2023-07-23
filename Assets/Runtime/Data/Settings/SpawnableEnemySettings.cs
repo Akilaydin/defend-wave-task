@@ -8,13 +8,14 @@ using UnityEditor;
 
 using UnityEngine;
 
-namespace DefendTheWave.Settings
+namespace DefendTheWave.Data.Settings
 {
 	[CreateAssetMenu(fileName = nameof(SpawnableEnemySettings), menuName = GameConstants.ScriptableObjectsRoot + nameof(SpawnableEnemySettings), order = 0)]
 	public class SpawnableEnemySettings : BaseSpawnableEntitySettings
 	{
 		[field: SerializeField] public EnemySettings EnemySettings { get; private set; }
 
+		#if UNITY_EDITOR
 		private void Reset()
 		{
 			SetGlobalSettingsAsCurrent();
@@ -38,5 +39,6 @@ namespace DefendTheWave.Settings
 
 			EnemySettings = (EnemySettings) globalGameSettings.DefaultEnemiesSettings.Clone();
 		}
+		#endif
 	}
 }

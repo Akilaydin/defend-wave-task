@@ -2,7 +2,7 @@
 
 using UnityEngine;
 
-namespace DefendTheWave.Settings
+namespace DefendTheWave.Data.Settings
 {
 	[Serializable]
 	public class EnemySettings : ICloneable

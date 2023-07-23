@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.AddressableAssets;
 
-namespace DefendTheWave.Settings
+namespace DefendTheWave.Data.Settings
 {
 	public abstract class BaseSpawnableEntitySettings : ScriptableObject
 	{

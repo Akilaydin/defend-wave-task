@@ -2,7 +2,7 @@
 
 using UnityEngine;
 
-namespace DefendTheWave.Settings
+namespace DefendTheWave.Data.Settings
 {
 	[CreateAssetMenu(fileName = nameof(SpawnablePlayerSettings), menuName = GameConstants.ScriptableObjectsRoot + nameof(SpawnablePlayerSettings), order = 0)]
 	public class SpawnablePlayerSettings : BaseSpawnableEntitySettings
