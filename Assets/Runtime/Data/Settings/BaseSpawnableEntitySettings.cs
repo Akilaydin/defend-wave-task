@@ -5,6 +5,6 @@ namespace DefendTheWave.Data.Settings
 {
 	public abstract class BaseSpawnableEntitySettings : ScriptableObject
 	{
-		[field: SerializeField] public AssetReferenceGameObject SpawnableEntityPrefab { get; private set; }
+		[field: SerializeField] public AssetReference SpawnableEntityPrefab { get; private set; }
 	}
 }
