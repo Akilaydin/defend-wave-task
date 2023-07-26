@@ -28,6 +28,8 @@ namespace DefendTheWave.Player
 		{
 			var player = await _spawner.SpawnAsync(_spawnResourceProvider, cancellation) as PlayerView;
 			
+			player!.transform.SetParent(_levelSceneData.PlayerSpawnRoot, false);
+			
 			_playerScope = _parentScope.CreateChild(CreatePlayerScope);
 
 			void CreatePlayerScope(IContainerBuilder builder)

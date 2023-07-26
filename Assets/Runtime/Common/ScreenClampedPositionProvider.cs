@@ -19,18 +19,13 @@ namespace DefendTheWave.Common
 			_screenBounds = _screenBoundsProvider.GetScreenBounds();
 		}
 		
-		private Vector3 GetClampedPosition(BoundsData boundsData, Vector3 sourcePosition)
+		public Vector3 GetClampedPosition(BoundsData boundsData, Vector3 sourcePosition)
 		{
-			var bounds = boundsData.Bounds;
+			var boundSize = boundsData.Bounds;
 			
-			var rightOffset = Mathf.Abs(bounds.max.x - bounds.center.x);
-			var leftOffset = Mathf.Abs(bounds.center.x - bounds.min.x);
-			var topOffset = Mathf.Abs(bounds.max.y - bounds.center.y);
-			var bottomOffset = Mathf.Abs(bounds.center.y - bounds.min.y);
-
-			sourcePosition.x = Mathf.Clamp(sourcePosition.x, _screenBounds.min.x + leftOffset, _screenBounds.max.x - rightOffset);
-			sourcePosition.y = Mathf.Clamp(sourcePosition.y, _screenBounds.min.y + bottomOffset, _screenBounds.max.y - topOffset);
-
+			sourcePosition.x = Mathf.Clamp(sourcePosition.x, boundSize.min.x, boundSize.max.x);
+			sourcePosition.y = Mathf.Clamp(sourcePosition.y, boundSize.min.y, boundSize.max.y);
+			
 			return sourcePosition;
 		}
 	}

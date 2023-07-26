@@ -18,9 +18,6 @@ namespace DefendTheWave.GameLifetime
 			Addressables.InitializeAsync().ToUniTask().Forget();
 
 			builder.Register<KeyboardInputService>(Lifetime.Singleton).AsImplementedInterfaces();
-			
-			builder.Register<ScreenBoundsProvider>(Lifetime.Singleton).AsSelf();
-			builder.Register<ScreenClampedPositionProvider>(Lifetime.Singleton).AsSelf();
 		}
 	}
 }
