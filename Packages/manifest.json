@@ -2,6 +2,7 @@
   "dependencies": {
     "com.madsbangh.easybuttons": "https://github.com/madsbangh/EasyButtons.git#upm",
     "com.origames.com.origames.extensions": "https://github.com/Akilaydin/OriGamesExtensions.git",
+    "com.cysharp.unitask": "https://github.com/Cysharp/UniTask.git?path=src/UniTask/Assets/Plugins/UniTask",
     "com.unity.addressables": "1.21.14",
     "com.unity.editorcoroutines": "1.0.0",
     "com.unity.feature.2d": "1.0.0",
