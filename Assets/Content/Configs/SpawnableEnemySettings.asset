@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: SpawnableEnemySettings
   m_EditorClassIdentifier: 
   <SpawnableEntityPrefab>k__BackingField:
-    m_AssetGUID: 
+    m_AssetGUID: 561a9000135bad5429693a8656f2bc4e
     m_SubObjectName: 
     m_SubObjectType: 
     m_EditorAssetChanged: 0

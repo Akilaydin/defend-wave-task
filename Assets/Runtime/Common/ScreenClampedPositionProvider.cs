@@ -8,7 +8,7 @@ using VContainer.Unity;
 
 namespace DefendTheWave.Common
 {
-	public class ClampedPositionProvider : IStartable
+	public class ScreenClampedPositionProvider : IStartable
 	{
 		[Inject] private readonly ScreenBoundsProvider _screenBoundsProvider;
 		
