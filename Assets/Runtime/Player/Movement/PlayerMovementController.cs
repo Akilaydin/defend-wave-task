@@ -2,8 +2,6 @@
 
 using DefendTheWave.Input;
 
-using OriGames.Extensions.Disposable;
-
 using UnityEngine;
 
 using VContainer;
@@ -16,15 +14,21 @@ namespace DefendTheWave.Player.Movement
 	public class PlayerMovementController : Disposable, IInitializable
 	{
 		[Inject] private readonly IInputService _inputService;
+
+		private Transform _playerTransform;
 		
 		void IInitializable.Initialize()
 		{
 			CompositeDisposable.Add(_inputService.MovementVector.WithoutCurrent().Subscribe(MovePlayer));
 		}
 
+		private void SetPlayerTransform(PlayerView playerView)
+		{
+		}
+
 		private void MovePlayer(Vector2 movementVector)
 		{
-			Debug.Log(movementVector);
+			_playerTransform.Translate(movementVector * 10 * Time.deltaTime);
 		}
 	}
 }

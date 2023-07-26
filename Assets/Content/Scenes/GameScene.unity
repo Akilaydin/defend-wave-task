@@ -969,7 +969,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _bootstrapLifetimeScope: {fileID: 1511170287}
-  _levelLifetimeScope: {fileID: 0}
+  _levelLifetimeScope: {fileID: 1494383585}
 --- !u!4 &2093779415
 Transform:
   m_ObjectHideFlags: 0
