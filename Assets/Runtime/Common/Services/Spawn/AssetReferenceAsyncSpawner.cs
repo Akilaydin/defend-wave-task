@@ -6,19 +6,29 @@ using Cysharp.Threading.Tasks;
 
 using UnityEngine;
 using UnityEngine.AddressableAssets;
+using UnityEngine.Assertions;
 using UnityEngine.ResourceManagement.AsyncOperations;
 
 namespace DefendTheWave.Common.Services.Spawn
 {
-	public class AssetReferenceAsyncSpawner : IAsyncSpawner<AssetReferenceSpawnResource, AssetReferenceSpawnResourceProvider>
+	public class AssetReferenceAsyncSpawner : IAsyncSpawner<AssetReferenceSpawnResource, ISpawnResourceProvider<AssetReferenceSpawnResource>>
 	{
 		private Queue<AsyncOperationHandle<GameObject>> _handles = new();
 
 		private bool _disposing;
+		
+		private ISpawnResourceProvider<AssetReferenceSpawnResource> _resourceProvider;
 
-		public async UniTask<ISpawnableEntity> SpawnAsync(AssetReferenceSpawnResourceProvider resourceProvider, CancellationToken token)
+		void IAsyncSpawner<AssetReferenceSpawnResource, ISpawnResourceProvider<AssetReferenceSpawnResource>>.SetResourceProvider(ISpawnResourceProvider<AssetReferenceSpawnResource> resourceProvider)
 		{
-			var handle = Addressables.InstantiateAsync(resourceProvider.GetSpawnResource().SpawnResource);
+			_resourceProvider = resourceProvider;
+		}
+
+		public async UniTask<ISpawnableEntity> SpawnAsync(CancellationToken token)
+		{
+			Assert.IsNotNull(_resourceProvider);
+			
+			var handle = Addressables.InstantiateAsync(_resourceProvider.GetSpawnResource().SpawnResource);
 			
 			_handles.Enqueue(handle);
 

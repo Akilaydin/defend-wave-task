@@ -9,6 +9,7 @@ namespace DefendTheWave.Common.Services.Spawn
 		where TSpawnResource : ISpawnResource
 		where TSpawnResourceProvider : ISpawnResourceProvider<TSpawnResource>
 	{
-		public UniTask<ISpawnableEntity> SpawnAsync(TSpawnResourceProvider resourceProvider, CancellationToken token);
+		public void SetResourceProvider(TSpawnResourceProvider resourceProvider);
+		public UniTask<ISpawnableEntity> SpawnAsync(CancellationToken token);
 	}
 }

@@ -17,16 +17,20 @@ namespace DefendTheWave.Player
 	{
 		[Inject] private readonly SpawnablePlayerSettings _spawnablePlayerSettings;
 		[Inject] private readonly LevelSceneData _levelSceneData;
-		[Inject] private readonly AssetReferenceSpawnResourceProvider _spawnResourceProvider;
 		[Inject] private readonly LifetimeScope _parentScope;
 		
-		[Inject] private readonly IAsyncSpawner<AssetReferenceSpawnResource, AssetReferenceSpawnResourceProvider> _spawner;
+		[Inject] private readonly ISpawnResourceProvider<AssetReferenceSpawnResource> _spawnResourceProvider;
+		[Inject] private readonly AsyncSpawnersFactory<AssetReferenceSpawnResource, ISpawnResourceProvider<AssetReferenceSpawnResource>> _spawnersFactory;
 
 		private LifetimeScope _playerScope;
+		
+		private IAsyncSpawner<AssetReferenceSpawnResource, ISpawnResourceProvider<AssetReferenceSpawnResource>> _spawner;
 
 		async UniTask IAsyncStartable.StartAsync(CancellationToken cancellation)
 		{
-			var player = await _spawner.SpawnAsync(_spawnResourceProvider, cancellation) as PlayerView;
+			_spawner = _spawnersFactory.GetAsyncSpawner(_spawnResourceProvider);
+			
+			var player = await _spawner.SpawnAsync(cancellation) as PlayerView;
 			
 			player!.transform.SetParent(_levelSceneData.PlayerSpawnRoot, false);
 			
