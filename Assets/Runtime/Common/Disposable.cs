@@ -6,7 +6,7 @@ namespace DefendTheWave.Common
 {
 	public class Disposable : IDisposable
 	{
-		protected CompositeDisposable CompositeDisposable = new();
+		protected readonly CompositeDisposable CompositeDisposable = new();
 
 		void IDisposable.Dispose()
 		{

@@ -670,7 +670,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _bounds:
     m_Center: {x: 0, y: -5.96, z: 0}
-    m_Extent: {x: 3.500425, y: 3.43, z: 0}
+    m_Extent: {x: 3.500425, y: 3.81, z: 0}
 --- !u!4 &1601648725
 Transform:
   m_ObjectHideFlags: 0

@@ -1,7 +1,5 @@
 ﻿using Cysharp.Threading.Tasks;
 
-using DefendTheWave.Common;
-using DefendTheWave.Common.Services;
 using DefendTheWave.Input;
 
 using UnityEngine.AddressableAssets;
