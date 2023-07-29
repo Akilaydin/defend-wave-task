@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6359265513673979996}
   - component: {fileID: 7597977164543188439}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: MainSprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -93,7 +93,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9222500163490484378}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Visual
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -125,7 +125,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5469907841851317216}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: BaseEnemy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
