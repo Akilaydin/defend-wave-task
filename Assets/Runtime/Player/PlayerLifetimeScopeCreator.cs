@@ -6,6 +6,7 @@ using Cysharp.Threading.Tasks;
 using DefendTheWave.Common.Services.Spawn;
 using DefendTheWave.Data;
 using DefendTheWave.Data.Settings;
+using DefendTheWave.Player.Health;
 using DefendTheWave.Player.Movement;
 
 using VContainer;
@@ -40,6 +41,10 @@ namespace DefendTheWave.Player
 			{
 				builder.Register<PlayerMovementController>(Lifetime.Scoped).AsImplementedInterfaces();
 				builder.Register<PlayerContainer>(Lifetime.Scoped).AsSelf().WithParameter(player);
+				
+				builder.RegisterInstance(_levelSceneData.PlayerHealthView);
+				builder.Register<PlayerHealthModel>(Lifetime.Scoped).AsSelf();
+				builder.Register<PlayerHealthController>(Lifetime.Scoped).AsSelf();
 			}
 		}
 

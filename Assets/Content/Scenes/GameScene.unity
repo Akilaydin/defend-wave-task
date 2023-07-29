@@ -385,7 +385,7 @@ MonoBehaviour:
   <LevelCamera>k__BackingField: {fileID: 986801730}
   <PlayerSpawnRoot>k__BackingField: {fileID: 1222781152}
   <PlayerBounds>k__BackingField: {fileID: 1601648724}
-  <HealthView>k__BackingField: {fileID: 1534800714}
+  <PlayerHealthView>k__BackingField: {fileID: 1534800714}
   <EnemiesSpawnPoints>k__BackingField:
   - {fileID: 892505886}
   - {fileID: 1088674118}
@@ -1579,7 +1579,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -32.1, y: 0}
+  m_AnchoredPosition: {x: -32.100006, y: 0}
   m_SizeDelta: {x: -94.2, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1701604332

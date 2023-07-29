@@ -2,9 +2,9 @@
 
 using UnityEngine;
 
-namespace Runtime.GUI
+namespace DefendTheWave.Player.Health
 {
-	public class HealthView : MonoBehaviour
+	public class PlayerHealthView : MonoBehaviour
 	{
 		[field: SerializeField] public TMP_Text HealthText { get; private set; }
 	}
