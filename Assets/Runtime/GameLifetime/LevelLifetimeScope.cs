@@ -27,7 +27,7 @@ namespace DefendTheWave.GameLifetime
 			builder.RegisterInstance(_enemiesSettings);
 			
 			builder.Register<ScreenBoundsProvider>(Lifetime.Scoped).AsSelf().AsImplementedInterfaces();
-			builder.Register<ScreenClampedPositionProvider>(Lifetime.Scoped).AsSelf().AsImplementedInterfaces();
+			builder.Register<PlayerClampedPositionProvider>(Lifetime.Scoped).AsSelf().AsImplementedInterfaces();
 			
 			builder.Register<AsyncSpawnersFactory<AssetReferenceSpawnResource, ISpawnResourceProvider<AssetReferenceSpawnResource>>>(Lifetime.Singleton).AsSelf();
 

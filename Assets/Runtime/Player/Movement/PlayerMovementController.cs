@@ -5,6 +5,8 @@ using DefendTheWave.Data;
 using DefendTheWave.Data.Settings;
 using DefendTheWave.Input;
 
+using Runtime;
+
 using UnityEngine;
 
 using VContainer;
@@ -14,31 +16,44 @@ using Disposable = DefendTheWave.Common.Disposable;
 
 namespace DefendTheWave.Player.Movement
 {
-	public class PlayerMovementController : Disposable, IInitializable
+	public class PlayerMovementController : Disposable, IInitializable, IStartable
 	{
 		[Inject] private readonly IInputService _inputService;
 		[Inject] private readonly PlayerContainer _playerContainer;
 		[Inject] private readonly SpawnablePlayerSettings _playerSettings;
-		[Inject] private readonly ScreenClampedPositionProvider _clampedPositionProvider;
+		[Inject] private readonly PlayerClampedPositionProvider _playerClampedPositionProvider;
 		[Inject] private readonly LevelSceneData _levelSceneData;
 
+		private FinishLineView _finishLineView;
 		private Transform _playerTransform;
-		private BoundsData _playerBounds;
+		
+		private float _movementOffsetX;
+		private float _movementOffsetY;
+		private float _maxYMovement;
 		
 		private float _playerSpeed;
 		
 		void IInitializable.Initialize()
 		{
-			CompositeDisposable.Add(_inputService.MovementVector.WithoutCurrent().Subscribe(AdjustPlayerPosition));
-			CompositeDisposable.Add(_playerContainer.Player.Subscribe(CachePlayerTransform));
-
 			_playerSpeed = _playerSettings.PlayerSpeed;
-			_playerBounds = _levelSceneData.PlayerBounds;
+			_finishLineView = _levelSceneData.FinishLineView;
+			
+			_maxYMovement = _finishLineView.transform.position.y - _finishLineView.Renderer.bounds.size.y / 2;
 		}
 
-		private void CachePlayerTransform(PlayerView playerView)
+		void IStartable.Start()
+		{
+			CompositeDisposable.Add(_inputService.MovementVector.WithoutCurrent().Subscribe(AdjustPlayerPosition));
+			CompositeDisposable.Add(_playerContainer.Player.Subscribe(CachePlayerData));
+		}
+		
+		// ReSharper disable once Unity.InefficientPropertyAccess
+		private void CachePlayerData(PlayerView playerView)
 		{
 			_playerTransform = playerView.transform;
+
+			_movementOffsetX = playerView.Renderer.sprite.bounds.size.x / 2;
+			_movementOffsetY = playerView.Renderer.sprite.bounds.size.y / 2;
 		}
 
 		private void AdjustPlayerPosition(Vector2 movementVector)
@@ -47,15 +62,13 @@ namespace DefendTheWave.Player.Movement
 			Vector2 newPosition;
 				
 			#if UNITY_EDITOR
-			newPosition = (Vector2)_playerTransform.position +
-				movementVector * _playerSettings.PlayerSpeed * Time.deltaTime;
+			newPosition = (Vector2)_playerTransform.position +movementVector * _playerSettings.PlayerSpeed * Time.deltaTime;
 			#else
-			newPosition = (Vector2)_playerTransform.position +
-				movementVector * _playerSpeed * Time.deltaTime;
+			newPosition = (Vector2)_playerTransform.position + movementVector * _playerSpeed * Time.deltaTime;
 			#endif
-
-			Vector2 clampedPosition = _clampedPositionProvider.GetClampedPosition(_playerBounds, newPosition);
 			
+			var clampedPosition = _playerClampedPositionProvider.GetClampedPosition(_maxYMovement, _movementOffsetX, _movementOffsetY, newPosition);
+
 			_playerTransform.position = clampedPosition;
 		}
 	}
