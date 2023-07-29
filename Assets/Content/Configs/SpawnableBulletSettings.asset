@@ -9,15 +9,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cf29facbdcbf4a44af5e4e85e6e0a778, type: 3}
-  m_Name: SpawnableEnemySettings
+  m_Script: {fileID: 11500000, guid: 21d2e760882847fda8ea53dd99efa622, type: 3}
+  m_Name: SpawnableBulletSettings
   m_EditorClassIdentifier: 
-  <SpawnableEntityPrefab>k__BackingField:
-    m_AssetGUID: 561a9000135bad5429693a8656f2bc4e
+  _spawnableEntityPrefab:
+    m_AssetGUID: b191e7373004c5a41a3bea10a68b23eb
     m_SubObjectName: 
     m_SubObjectType: 
     m_EditorAssetChanged: 0
-  <EnemySettings>k__BackingField:
-    <Speed>k__BackingField: {x: 5, y: 10}
-    <Health>k__BackingField: 3
-    <DamageOnLeak>k__BackingField: 1

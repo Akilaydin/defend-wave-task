@@ -1,6 +1,4 @@
-﻿using DefendTheWave.Common;
-using DefendTheWave.Common.Services;
-using DefendTheWave.Common.Services.Spawn;
+﻿using DefendTheWave.Common.Services;
 using DefendTheWave.Data;
 using DefendTheWave.Data.Settings;
 using DefendTheWave.Player;
@@ -27,13 +25,7 @@ namespace DefendTheWave.GameLifetime
 			builder.RegisterInstance(_enemiesSettings);
 			
 			builder.Register<ScreenBoundsProvider>(Lifetime.Scoped).AsSelf().AsImplementedInterfaces();
-			builder.Register<PlayerClampedPositionProvider>(Lifetime.Scoped).AsSelf().AsImplementedInterfaces();
 			
-			builder.Register<AsyncSpawnersFactory<AssetReferenceSpawnResource, ISpawnResourceProvider<AssetReferenceSpawnResource>>>(Lifetime.Singleton).AsSelf();
-
-			builder.Register<AssetReferenceAsyncSpawner>(Lifetime.Scoped).AsImplementedInterfaces();
-			builder.Register<AssetReferenceSpawnResourceProvider>(Lifetime.Transient).AsImplementedInterfaces().WithParameter(_spawnablePlayerSettings.SpawnableEntityPrefab);
-
 			builder.RegisterEntryPoint<PlayerLifetimeScopeCreator>();
 		}
 	}

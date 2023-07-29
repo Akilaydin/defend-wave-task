@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Runtime
+namespace DefendTheWave.GameEnvironment
 {
 	public class FinishLineView : MonoBehaviour
 	{

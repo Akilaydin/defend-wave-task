@@ -1,8 +1,8 @@
-using System;
 using System.Threading;
 
 using Cysharp.Threading.Tasks;
 
+using DefendTheWave.Common;
 using DefendTheWave.Common.Services.Spawn;
 using DefendTheWave.Data;
 using DefendTheWave.Data.Settings;
@@ -14,31 +14,28 @@ using VContainer.Unity;
 
 namespace DefendTheWave.Player
 {
-	public class PlayerLifetimeScopeCreator : IAsyncStartable, IDisposable
+	public class PlayerLifetimeScopeCreator : Disposable, IAsyncStartable
 	{
-		[Inject] private readonly SpawnablePlayerSettings _spawnablePlayerSettings;
 		[Inject] private readonly LevelSceneData _levelSceneData;
 		[Inject] private readonly LifetimeScope _parentScope;
 		
-		[Inject] private readonly ISpawnResourceProvider<AssetReferenceSpawnResource> _spawnResourceProvider;
 		[Inject] private readonly AsyncSpawnersFactory<AssetReferenceSpawnResource, ISpawnResourceProvider<AssetReferenceSpawnResource>> _spawnersFactory;
-
-		private LifetimeScope _playerScope;
+		[Inject] private readonly SpawnablePlayerSettings _spawnablePlayerSettings;
 		
-		private IAsyncSpawner<AssetReferenceSpawnResource, ISpawnResourceProvider<AssetReferenceSpawnResource>> _spawner;
-
 		async UniTask IAsyncStartable.StartAsync(CancellationToken cancellation)
 		{
-			_spawner = _spawnersFactory.GetAsyncSpawner(_spawnResourceProvider);
+			var playerSpawner = _spawnersFactory.GetAsyncSpawner(_spawnablePlayerSettings);
 			
-			var player = await _spawner.SpawnAsync(cancellation) as PlayerView;
+			var player = (PlayerView) await playerSpawner.SpawnAsync(cancellation);
 			
-			player!.transform.SetParent(_levelSceneData.PlayerSpawnRoot, false);
+			player.transform.SetParent(_levelSceneData.PlayerSpawnRoot, false);
 			
-			_playerScope = _parentScope.CreateChild(CreatePlayerScope);
+			CompositeDisposable.Add(_parentScope.CreateChild(CreatePlayerScope));
 
 			void CreatePlayerScope(IContainerBuilder builder)
 			{
+				builder.Register<PlayerClampedPositionProvider>(Lifetime.Scoped).AsSelf().AsImplementedInterfaces();
+				
 				builder.Register<PlayerMovementController>(Lifetime.Scoped).AsImplementedInterfaces();
 				builder.Register<PlayerContainer>(Lifetime.Scoped).AsSelf().WithParameter(player);
 				
@@ -46,13 +43,6 @@ namespace DefendTheWave.Player
 				builder.Register<PlayerHealthModel>(Lifetime.Scoped).AsSelf();
 				builder.Register<PlayerHealthController>(Lifetime.Scoped).AsSelf();
 			}
-		}
-
-		void IDisposable.Dispose()
-		{
-			_spawner.Dispose();
-			
-			_playerScope.Dispose();
 		}
 	}
 }

@@ -12,11 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ad15d2226a344a1fbb91fdd5a713f144, type: 3}
   m_Name: PlayerSettings
   m_EditorClassIdentifier: 
-  <SpawnableEntityPrefab>k__BackingField:
+  _spawnableEntityPrefab:
     m_AssetGUID: fd5e1a38c19763a439e52bc11baee1dd
     m_SubObjectName: 
     m_SubObjectType: 
     m_EditorAssetChanged: 0
+  <SpawnableBulletSettings>k__BackingField: {fileID: 11400000, guid: 158c052272e738c48944093805dfd5a1, type: 2}
   <Damage>k__BackingField: 1
   <BlastRadius>k__BackingField: 1
   <RateOfFire>k__BackingField: 0.25

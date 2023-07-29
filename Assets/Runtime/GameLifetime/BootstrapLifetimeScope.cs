@@ -1,8 +1,5 @@
-﻿using Cysharp.Threading.Tasks;
-
+﻿using DefendTheWave.Common.Services.Spawn;
 using DefendTheWave.Input;
-
-using UnityEngine.AddressableAssets;
 
 using VContainer;
 using VContainer.Unity;
@@ -13,9 +10,10 @@ namespace DefendTheWave.GameLifetime
 	{
 		protected override void Configure(IContainerBuilder builder)
 		{
-			Addressables.InitializeAsync().ToUniTask().Forget();
-
 			builder.Register<KeyboardInputService>(Lifetime.Singleton).AsImplementedInterfaces();
+			
+			builder.Register<AssetReferenceAsyncSpawner>(Lifetime.Transient).AsImplementedInterfaces();
+			builder.Register<AsyncSpawnersFactory<AssetReferenceSpawnResource, ISpawnResourceProvider<AssetReferenceSpawnResource>>>(Lifetime.Singleton).AsSelf();
 		}
 	}
 }

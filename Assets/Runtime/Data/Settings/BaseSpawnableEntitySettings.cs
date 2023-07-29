@@ -1,10 +1,17 @@
-﻿using UnityEngine;
+﻿using DefendTheWave.Common.Services.Spawn;
+
+using UnityEngine;
 using UnityEngine.AddressableAssets;
 
 namespace DefendTheWave.Data.Settings
 {
-	public abstract class BaseSpawnableEntitySettings : ScriptableObject
+	public abstract class BaseSpawnableEntitySettings : ScriptableObject, ISpawnResourceProvider<AssetReferenceSpawnResource>
 	{
-		[field: SerializeField] public AssetReference SpawnableEntityPrefab { get; private set; }
+		[SerializeField] private AssetReference _spawnableEntityPrefab;
+
+		public AssetReferenceSpawnResource GetSpawnResource()
+		{
+			return new AssetReferenceSpawnResource(_spawnableEntityPrefab);
+		}
 	}
 }

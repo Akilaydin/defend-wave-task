@@ -2,7 +2,7 @@
 
 namespace DefendTheWave.Common.Services.Spawn
 {
-	public class AsyncSpawnersFactory<TSpawnResource, TSpawnResourceProvider>
+	public class AsyncSpawnersFactory<TSpawnResource, TSpawnResourceProvider> : Disposable
 		where TSpawnResource : ISpawnResource
 		where TSpawnResourceProvider : ISpawnResourceProvider<TSpawnResource>
 	{
@@ -13,6 +13,8 @@ namespace DefendTheWave.Common.Services.Spawn
 			var spawner = _resolver.Resolve<IAsyncSpawner<TSpawnResource, TSpawnResourceProvider>>();
 			
 			spawner.SetResourceProvider(spawnResourceProvider);
+			
+			CompositeDisposable.Add(spawner);
 
 			return spawner;
 		}
