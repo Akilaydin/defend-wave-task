@@ -9,7 +9,7 @@ using DG.Tweening;
 
 using UnityEngine;
 
-namespace DefendTheWave.GUI
+namespace DefendTheWave.GUI.Views
 {
 	public abstract class BasePopupView : MonoBehaviour, IDisposable
 	{

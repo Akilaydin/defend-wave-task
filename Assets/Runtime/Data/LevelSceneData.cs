@@ -1,5 +1,5 @@
 ﻿using DefendTheWave.GameEnvironment;
-using DefendTheWave.GUI;
+using DefendTheWave.GUI.Views;
 using DefendTheWave.Player.Health;
 
 using UnityEngine;

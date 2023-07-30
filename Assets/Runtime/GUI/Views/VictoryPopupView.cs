@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
-namespace DefendTheWave.GUI
+namespace DefendTheWave.GUI.Views
 {
 	public class VictoryPopupView : BasePopupView
 	{
