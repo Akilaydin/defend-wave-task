@@ -1,4 +1,6 @@
-﻿using Cysharp.Threading.Tasks;
+﻿using System.Threading;
+
+using Cysharp.Threading.Tasks;
 
 using DefendTheWave.Player;
 using DefendTheWave.Player.Shooting;
@@ -13,15 +15,15 @@ namespace DefendTheWave.Common.Services.Spawn.Pooling
 {
 	public class BulletsPool : IAsyncObjectPool<BulletView>, IInitializable
 	{
-		[Inject] private readonly ISpawnResourceProvider<AssetReferenceSpawnResource> _spawnResourceProvider;
+		[Inject] private readonly ISpawnResourceProvider<AssetReferenceSpawnResource> _bulletSpawnResource;
+		[Inject] private readonly AsyncSpawnersFactory<AssetReferenceSpawnResource, ISpawnResourceProvider<AssetReferenceSpawnResource>> _spawnersFactory;
 
 		private ObjectPool<BulletView> _innerPool;
+		private IAsyncSpawner<AssetReferenceSpawnResource, ISpawnResourceProvider<AssetReferenceSpawnResource>> _bulletsSpawner;
 
-		private AssetReference _bulletReference;
-		
 		void IInitializable.Initialize()
 		{
-			_bulletReference = _spawnResourceProvider.GetSpawnResource().SpawnResource;
+			_bulletsSpawner = _spawnersFactory.GetAsyncSpawner(_bulletSpawnResource);
 		}
 
 		private void OnGotBulletFromPool(BulletView bullet)
@@ -39,13 +41,11 @@ namespace DefendTheWave.Common.Services.Spawn.Pooling
 			bullet.OnDestroyed();
 		}
 
-		public async UniTask<BulletView> GetAsync()
+		public async UniTask<BulletView> GetAsync(CancellationToken token)
 		{
-			var spawnedBullet = (await _bulletReference.InstantiateAsync()).GetComponent<BulletView>();
+			var spawnedBullet = (await _bulletsSpawner.SpawnAsync(token));
 			
-			spawnedBullet.OnCreated();
-			
-			return spawnedBullet;
+			return (BulletView) spawnedBullet;
 		}
 
 		public void ReturnToPool(BulletView poolableObject)

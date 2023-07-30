@@ -14,6 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <DefeatedEnemiesCountToWin>k__BackingField: {x: 10, y: 15.446121}
   <LeakedEnemiesCountToLose>k__BackingField: 3
+  <EnemiesLayer>k__BackingField:
+    serializedVersion: 2
+    m_Bits: 64
   <EnemiesSpawnCooldown>k__BackingField: {x: 0.65, y: 2}
   <DefaultEnemiesSettings>k__BackingField:
     <Speed>k__BackingField: {x: 1, y: 99.9}
