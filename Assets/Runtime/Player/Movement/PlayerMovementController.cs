@@ -61,7 +61,7 @@ namespace DefendTheWave.Player.Movement
 			Vector2 newPosition;
 				
 			#if UNITY_EDITOR
-			newPosition = (Vector2)_playerTransform.position +movementVector * _playerSettings.PlayerSpeed * Time.deltaTime;
+			newPosition = (Vector2)_playerTransform.position + movementVector * _playerSettings.PlayerSpeed * Time.deltaTime;
 			#else
 			newPosition = (Vector2)_playerTransform.position + movementVector * _playerSpeed * Time.deltaTime;
 			#endif

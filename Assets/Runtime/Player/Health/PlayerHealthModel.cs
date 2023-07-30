@@ -14,5 +14,10 @@ namespace DefendTheWave.Player.Health
 		{
 			_playerHealth = new AsyncReactiveProperty<int>(gameSettings.LeakedEnemiesCountToLose);
 		}
+
+		public void DecreaseHealth(int amount = 1)
+		{
+			_playerHealth.Value -= amount;
+		}
 	}
 }
