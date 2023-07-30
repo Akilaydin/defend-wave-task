@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 
 using Cysharp.Threading.Tasks;
 using Cysharp.Threading.Tasks.Linq;
@@ -31,16 +32,16 @@ namespace DefendTheWave.Player.Shooting
 
 		void IInitializable.Initialize()
 		{
-			CompositeDisposable.Add(UniTaskAsyncEnumerable.Interval(TimeSpan.FromSeconds(_playerSettings.RateOfFire)).Subscribe(ShootAsync));
+			CompositeDisposable.Add(UniTaskAsyncEnumerable.Interval(TimeSpan.FromSeconds(_playerSettings.RateOfFire)).SubscribeAwait(ShootAsync));
 
 			_screenBounds = _screenBoundsProvider.GetScreenBounds();
 			_projectileSpeed = _playerSettings.ProjectileSpeed;
 		}
 		
 #pragma warning disable CS4014
-		private async UniTaskVoid ShootAsync(AsyncUnit _)
+		private async UniTask ShootAsync(AsyncUnit _, CancellationToken token)
 		{
-			var bullet = await _bulletsPool.GetAsync();
+			var bullet = await _bulletsPool.GetAsync(token);
 
 			bullet.transform.DOMoveY(_screenBounds.max.y + BulletReleaseOffset, _projectileSpeed).SetSpeedBased(true).OnComplete(() =>
 			{

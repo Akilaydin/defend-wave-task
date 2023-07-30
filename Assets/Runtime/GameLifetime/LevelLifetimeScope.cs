@@ -1,6 +1,7 @@
 ﻿using DefendTheWave.Common.Services;
 using DefendTheWave.Data;
 using DefendTheWave.Data.Settings;
+using DefendTheWave.GUI.Controllers;
 using DefendTheWave.Player;
 
 using UnityEngine;
@@ -23,10 +24,17 @@ namespace DefendTheWave.GameLifetime
 			builder.RegisterInstance(_gameSettings);
 			builder.RegisterInstance(_spawnablePlayerSettings);
 			builder.RegisterInstance(_enemiesSettings);
+			builder.RegisterInstance(_levelSceneData.LostPopup);
+			builder.RegisterInstance(_levelSceneData.VictoryPopup);
 			
 			builder.Register<ScreenBoundsProvider>(Lifetime.Scoped).AsSelf().AsImplementedInterfaces();
 			
-			builder.RegisterEntryPoint<PlayerLifetimeScopeCreator>();
+			builder.Register<PlayerLifetimeScopeCreator>(Lifetime.Scoped).AsImplementedInterfaces();
+			builder.Register<LostPopupController>(Lifetime.Scoped).AsImplementedInterfaces();
+			builder.Register<VictoryPopupController>(Lifetime.Scoped).AsImplementedInterfaces();
+			
+			builder.Register<GameStateModel>(Lifetime.Scoped).AsSelf();
+			builder.Register<GameRestarter>(Lifetime.Scoped).AsSelf();
 		}
 	}
 }
