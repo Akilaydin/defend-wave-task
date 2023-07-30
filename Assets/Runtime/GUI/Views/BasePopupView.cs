@@ -34,6 +34,7 @@ namespace DefendTheWave.GUI.Views
 			_popupGameObject.SetActive(false);
 		}
 
+#pragma warning disable CS4014
 		private async UniTask ScalePopup(PopupBounceConfiguration bounceConfiguration, CancellationToken token)
 		{
 			var sequence = DOTween.Sequence();
@@ -47,7 +48,7 @@ namespace DefendTheWave.GUI.Views
 
 			await _lastTween.ToUniTask(cancellationToken: token);
 		}
-
+#pragma warning restore CS4014
 		void IDisposable.Dispose()
 		{
 			if (_lastTween.IsActive())

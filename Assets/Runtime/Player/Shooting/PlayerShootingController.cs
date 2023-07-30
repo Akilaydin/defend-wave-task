@@ -36,7 +36,8 @@ namespace DefendTheWave.Player.Shooting
 			_screenBounds = _screenBoundsProvider.GetScreenBounds();
 			_projectileSpeed = _playerSettings.ProjectileSpeed;
 		}
-
+		
+#pragma warning disable CS4014
 		private async UniTaskVoid ShootAsync(AsyncUnit _)
 		{
 			var bullet = await _bulletsPool.GetAsync();
@@ -46,6 +47,7 @@ namespace DefendTheWave.Player.Shooting
 				ReturnBulletToPool(bullet);		
 			});
 		}
+#pragma warning restore CS4014
 
 		private void ReturnBulletToPool(BulletView bulletView)
 		{
