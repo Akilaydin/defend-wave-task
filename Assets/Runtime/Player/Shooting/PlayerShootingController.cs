@@ -7,6 +7,7 @@ using Cysharp.Threading.Tasks.Linq;
 
 using DefendTheWave.Common.Services;
 using DefendTheWave.Common.Services.Spawn.Pooling;
+using DefendTheWave.Common.Services.Spawn.Pooling.AddressablesPooling;
 using DefendTheWave.Data;
 using DefendTheWave.Data.Settings;
 
@@ -21,17 +22,18 @@ using Disposable = DefendTheWave.Common.Disposable;
 
 namespace DefendTheWave.Player.Shooting
 {
-	public class PlayerShootingController : Disposable, IStartable
+	public class PlayerShootingController : Disposable, IStartable, IAsyncStartable
 	{
 		private const float BulletReleaseOffsetMultiplier = 1.5f;
 		private const float RaycastBoxHeight = 0.5f;
+		private const int PreloadedBulletsCount = 10;
 
 		[Inject] private readonly GlobalGameSettings _globalGameSettings;
 		[Inject] private readonly SpawnablePlayerSettings _playerSettings;
-		[Inject] private readonly IAsyncObjectPool<BulletView> _bulletsPool;
 		[Inject] private readonly ScreenBoundsProvider _screenBoundsProvider;
 		[Inject] private readonly PlayerContainer _playerContainer;
 		[Inject] private readonly LevelSceneData _sceneData;
+		[Inject] private readonly SpawnableBulletSettings _spawnableBulletSettings;
 
 		private PlayerView _player;
 		
@@ -39,10 +41,11 @@ namespace DefendTheWave.Player.Shooting
 		private float _projectileSpeed;
 		private float _blastRadius;
 		private int _enemiesLayer;
+		private AddressablePool _addressablePool;
 
 		void IStartable.Start()
 		{
-			CompositeDisposable.Add(UniTaskAsyncEnumerable.Interval(TimeSpan.FromSeconds(_playerSettings.RateOfFire)).SubscribeAwait(ShootAsync));
+			CompositeDisposable.Add(UniTaskAsyncEnumerable.Interval(TimeSpan.FromSeconds(_playerSettings.RateOfFire)).Subscribe(Shoot));
 			CompositeDisposable.Add(_playerContainer.Player.Subscribe(CachePlayer));
 			
 			_screenBounds = _screenBoundsProvider.GetScreenBounds();
@@ -51,8 +54,14 @@ namespace DefendTheWave.Player.Shooting
 			_blastRadius = _playerSettings.BlastRadius;
 
 			_enemiesLayer = _globalGameSettings.EnemiesLayer;
+			_addressablePool = new AddressablePool(_spawnableBulletSettings.GetSpawnResource().SpawnResource.RuntimeKey, _spawnableBulletSettings.GetSpawnResource().SpawnResource + " pool");
 		}
 
+		async UniTask IAsyncStartable.StartAsync(CancellationToken cancellation)
+		{
+			await _addressablePool.Preload(PreloadedBulletsCount);
+		}
+		
 		private void CachePlayer(PlayerView playerView)
 		{
 			_player = playerView;
@@ -60,13 +69,13 @@ namespace DefendTheWave.Player.Shooting
 		
 #pragma warning disable CS4014
 
-		private async UniTask ShootAsync(AsyncUnit _, CancellationToken token)
+		private void Shoot(AsyncUnit _)
 		{
 			if (EnemyInBlastRange(out var closestEnemyPosition))
 			{
-				var bullet = await _bulletsPool.GetAsync(token);
+				var bullet = _addressablePool.Get();
 
-				var bulletTransform = bullet.transform;
+				var bulletTransform = bullet.Instance.transform;
 				
 				bulletTransform.SetParent(_sceneData.BulletsSpawnRoot); 
 
@@ -77,7 +86,7 @@ namespace DefendTheWave.Player.Shooting
 				bulletTransform.transform.DOMove(direction.normalized * _blastRadius * BulletReleaseOffsetMultiplier, _projectileSpeed)
 					.SetSpeedBased(true).OnComplete(() =>
 				{
-					ReturnBulletToPool(bullet);		
+					_addressablePool.Return(bullet);
 				});
 			}
 		}
@@ -112,11 +121,5 @@ namespace DefendTheWave.Player.Shooting
 				return Vector2.Distance(v1, v2) >= Vector2.Distance(v2, v1) ? v1 : v2;
 			}
 		}
-
-		private void ReturnBulletToPool(BulletView bulletView)
-		{
-			_bulletsPool.ReturnToPool(bulletView);
-		}
-
 	}
 }

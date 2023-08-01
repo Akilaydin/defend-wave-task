@@ -4,7 +4,6 @@ using Cysharp.Threading.Tasks;
 
 using DefendTheWave.Common;
 using DefendTheWave.Common.Services.Spawn;
-using DefendTheWave.Common.Services.Spawn.Pooling;
 using DefendTheWave.Data;
 using DefendTheWave.Data.Settings;
 using DefendTheWave.Player.Health;
@@ -47,7 +46,6 @@ namespace DefendTheWave.Player
 				builder.Register<PlayerMovementController>(Lifetime.Scoped).AsImplementedInterfaces();
 				
 				builder.Register<PlayerShootingController>(Lifetime.Scoped).AsImplementedInterfaces();
-				builder.Register<BulletsPool>(Lifetime.Scoped).AsImplementedInterfaces();
 				
 				builder.Register<PlayerContainer>(Lifetime.Scoped).AsSelf().WithParameter(player);
 

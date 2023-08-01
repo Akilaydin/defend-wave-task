@@ -19,7 +19,7 @@ MonoBehaviour:
     m_EditorAssetChanged: 0
   <SpawnableBulletSettings>k__BackingField: {fileID: 11400000, guid: 158c052272e738c48944093805dfd5a1, type: 2}
   <Damage>k__BackingField: 1
-  <BlastRadius>k__BackingField: 1
+  <BlastRadius>k__BackingField: 10
   <RateOfFire>k__BackingField: 0.25
-  <ProjectileSpeed>k__BackingField: 1
+  <ProjectileSpeed>k__BackingField: 9
   <PlayerSpeed>k__BackingField: 15.79

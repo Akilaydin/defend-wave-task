@@ -1,4 +1,5 @@
-﻿using DefendTheWave.Common.Services.Spawn.Pooling;
+﻿using DefendTheWave.Common.Services.Spawn;
+using DefendTheWave.Common.Services.Spawn.Pooling;
 
 using UnityEngine;
 
@@ -13,5 +14,7 @@ namespace Runtime.Enemies
 		void IPoolableObject.OnReturnedToPool() { }
 
 		void IPoolableObject.OnDestroyed() { }
+
+		void ISpawnableEntity.OnSpawned() { }
 	}
 }
