@@ -9,11 +9,6 @@ namespace DefendTheWave.Player
 		[field: SerializeField] public SpriteRenderer Renderer { get; private set; }
 		[field: SerializeField] public Transform BulletsSpawnPoint { get; private set; }
 		
-		public Transform PlayerTransform { get; private set; }
-		
-		void ISpawnableEntity.OnSpawned()
-		{
-			PlayerTransform = transform;
-		}
+		void ISpawnableEntity.OnSpawned() { }
 	}
 }
