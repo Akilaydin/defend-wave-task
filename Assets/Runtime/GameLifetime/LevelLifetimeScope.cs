@@ -27,14 +27,16 @@ namespace DefendTheWave.GameLifetime
 			builder.RegisterInstance(_levelSceneData.LostPopup);
 			builder.RegisterInstance(_levelSceneData.VictoryPopup);
 			
-			builder.Register<ScreenBoundsProvider>(Lifetime.Scoped).AsSelf().AsImplementedInterfaces();
+			//note: All entry points to fix the known framework issue https://github.com/hadashiA/VContainer/issues/319
+			builder.RegisterEntryPoint<PlayerLifetimeScopeCreator>();
 			
-			builder.Register<PlayerLifetimeScopeCreator>(Lifetime.Scoped).AsImplementedInterfaces();
-			builder.Register<LostPopupController>(Lifetime.Scoped).AsImplementedInterfaces();
-			builder.Register<VictoryPopupController>(Lifetime.Scoped).AsImplementedInterfaces();
+			builder.RegisterEntryPoint<LostPopupController>();
+			builder.RegisterEntryPoint<VictoryPopupController>();
 			
-			builder.Register<GameStateModel>(Lifetime.Scoped).AsSelf();
-			builder.Register<GameRestarter>(Lifetime.Scoped).AsSelf();
+			builder.RegisterEntryPoint<ScreenBoundsProvider>(Lifetime.Scoped).AsSelf();
+
+			builder.RegisterEntryPoint<GameStateModel>().AsSelf();
+			builder.RegisterEntryPoint<GameRestarter>().AsSelf();
 		}
 	}
 }
