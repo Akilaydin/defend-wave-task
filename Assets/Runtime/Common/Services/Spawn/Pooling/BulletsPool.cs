@@ -2,10 +2,9 @@
 
 using Cysharp.Threading.Tasks;
 
-using DefendTheWave.Player;
+using DefendTheWave.Data.Settings;
 using DefendTheWave.Player.Shooting;
 
-using UnityEngine.AddressableAssets;
 using UnityEngine.Pool;
 
 using VContainer;
@@ -15,35 +14,36 @@ namespace DefendTheWave.Common.Services.Spawn.Pooling
 {
 	public class BulletsPool : IAsyncObjectPool<BulletView>, IInitializable
 	{
-		[Inject] private readonly ISpawnResourceProvider<AssetReferenceSpawnResource> _bulletSpawnResource;
+		[Inject] private readonly SpawnableBulletSettings _spawnableBulletSettings;
 		[Inject] private readonly AsyncSpawnersFactory<AssetReferenceSpawnResource, ISpawnResourceProvider<AssetReferenceSpawnResource>> _spawnersFactory;
 
-		private ObjectPool<BulletView> _innerPool;
 		private IAsyncSpawner<AssetReferenceSpawnResource, ISpawnResourceProvider<AssetReferenceSpawnResource>> _bulletsSpawner;
 
 		void IInitializable.Initialize()
 		{
-			_bulletsSpawner = _spawnersFactory.GetAsyncSpawner(_bulletSpawnResource);
+			_bulletsSpawner = _spawnersFactory.GetAsyncSpawner(_spawnableBulletSettings);
 		}
 
-		private void OnGotBulletFromPool(BulletView bullet)
+		private void OnGotBulletFromPool(IPoolableObject bullet)
 		{
 			bullet.OnGotFromPool();
 		}
 		
-		private void OnBulletReleased(BulletView bullet)
+		private void OnBulletReleased(IPoolableObject bullet)
 		{
 			bullet.OnReturnedToPool();
 		}
 		
-		private void OnBulletDestroyed(BulletView bullet)
+		private void OnBulletDestroyed(IPoolableObject bullet)
 		{
 			bullet.OnDestroyed();
 		}
 
 		public async UniTask<BulletView> GetAsync(CancellationToken token)
 		{
-			var spawnedBullet = (await _bulletsSpawner.SpawnAsync(token));
+			var spawnedBullet = (await _bulletsSpawner.SpawnAsync(token)) as IPoolableObject;
+			
+			OnGotBulletFromPool(spawnedBullet);
 			
 			return (BulletView) spawnedBullet;
 		}
