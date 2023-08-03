@@ -4,9 +4,12 @@ using System.Runtime.ExceptionServices;
 
 using Cysharp.Threading.Tasks;
 
+using DG.Tweening;
+
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
+
 using Object = UnityEngine.Object;
 
 namespace DefendTheWave.Common.Services.Spawn.Pooling.AddressablesPooling
@@ -25,17 +28,18 @@ namespace DefendTheWave.Common.Services.Spawn.Pooling.AddressablesPooling
             Key = key;
             Capacity = -1;
             Parent = new GameObject(poolName);
+            Parent.transform.position = Vector2.one * 100;
             Object.DontDestroyOnLoad(Parent);
         }
-        
+
         public GameObject Parent { get; }
 
         public object Key { get; }
 
         public bool IsDisposed { get; private set; }
-        
+
         public int Capacity { get; private set; }
-        
+
         public int UsableObjectsCount => _usableObjects.Count;
 
         public void Dispose()
@@ -58,7 +62,7 @@ namespace DefendTheWave.Common.Services.Spawn.Pooling.AddressablesPooling
 
             IsDisposed = true;
         }
-        
+
         public async UniTask Preload(int capacity)
         {
             if (IsDisposed)
@@ -76,7 +80,6 @@ namespace DefendTheWave.Common.Services.Spawn.Pooling.AddressablesPooling
             var diffCount = capacity - _busyObjects.Count - _usableObjects.Count;
             if (diffCount >= 1)
             {
-                // Generate new instances.
                 var instantiateHandles = new List<AsyncOperationHandle>();
                 for (var i = 0; i < diffCount; i++)
                 {
@@ -86,12 +89,12 @@ namespace DefendTheWave.Common.Services.Spawn.Pooling.AddressablesPooling
 
                 var instantiateGroupHandle =
                     Addressables.ResourceManager.CreateGenericGroupOperation(instantiateHandles);
-                
+
                 while (!instantiateGroupHandle.IsDone)
                 {
                     await UniTask.Yield();
                 }
-                
+
                 if (instantiateGroupHandle.Status == AsyncOperationStatus.Failed)
                     ExceptionDispatchInfo.Capture(instantiateGroupHandle.OperationException).Throw();
 
@@ -104,7 +107,6 @@ namespace DefendTheWave.Common.Services.Spawn.Pooling.AddressablesPooling
             }
             else if (diffCount <= -1)
             {
-                // Remove unused objects
                 for (var i = 0; i < -diffCount; i++)
                 {
                     var obj = _usableObjects.Pop();
@@ -115,10 +117,6 @@ namespace DefendTheWave.Common.Services.Spawn.Pooling.AddressablesPooling
             _isWarmingUp = false;
         }
 
-        /// <summary>
-        ///     Use an instance in the object pool.
-        /// </summary>
-        /// <returns></returns>
         public PooledObject Get()
         {
             if (IsDisposed)
@@ -145,11 +143,7 @@ namespace DefendTheWave.Common.Services.Spawn.Pooling.AddressablesPooling
             _busyObjects.Add(handle.Id, handle);
             return handle;
         }
-
-        /// <summary>
-        ///     Return a item to the object pool.
-        /// </summary>
-        /// <param name="obj"></param>
+        
         public void Return(PooledObject obj)
         {
             if (IsDisposed)
@@ -164,6 +158,7 @@ namespace DefendTheWave.Common.Services.Spawn.Pooling.AddressablesPooling
 
             instance.transform.SetParent(Parent.transform);
             instance.SetActive(false);
+            instance.transform.DOKill();
 
             _busyObjects.Remove(obj.Id);
             _usableObjects.Push(obj.Instance);

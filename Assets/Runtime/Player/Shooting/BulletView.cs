@@ -1,20 +1,16 @@
-﻿using DefendTheWave.Common.Services.Spawn;
-using DefendTheWave.Common.Services.Spawn.Pooling;
+﻿using System;
 
 using UnityEngine;
 
 namespace DefendTheWave.Player.Shooting
 {
-	public class BulletView : MonoBehaviour, IPoolableObject
+	public class BulletView : MonoBehaviour
 	{
-		public void OnCreated() { }
+		public event Action HitEnemy;
 
-		public void OnGotFromPool() { }
-
-		public void OnReturnedToPool() { }
-
-		public void OnDestroyed() { }
-
-		public void OnSpawned() { }
+		public void InvokeHitEnemy()
+		{
+			HitEnemy?.Invoke();
+		}
 	}
 }

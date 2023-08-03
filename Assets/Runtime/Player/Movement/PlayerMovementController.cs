@@ -25,13 +25,13 @@ namespace DefendTheWave.Player.Movement
 
 		private FinishLineView _finishLineView;
 		private Transform _playerTransform;
-		
+
 		private float _movementOffsetX;
 		private float _movementOffsetY;
 		private float _maxYMovement;
 		
 		private float _playerSpeed;
-		
+
 		void IInitializable.Initialize()
 		{
 			_playerSpeed = _playerSettings.PlayerSpeed;

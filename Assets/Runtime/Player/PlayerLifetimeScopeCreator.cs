@@ -6,6 +6,7 @@ using DefendTheWave.Common;
 using DefendTheWave.Common.Services.Spawn;
 using DefendTheWave.Data;
 using DefendTheWave.Data.Settings;
+using DefendTheWave.GameLifetime.Interfaces;
 using DefendTheWave.Player.Health;
 using DefendTheWave.Player.Movement;
 using DefendTheWave.Player.Shooting;
@@ -15,13 +16,15 @@ using VContainer.Unity;
 
 namespace DefendTheWave.Player
 {
-	public class PlayerLifetimeScopeCreator : Disposable, IAsyncStartable
+	public class PlayerLifetimeScopeCreator : Disposable, IAsyncStartable, IGameEndedHandler
 	{
 		[Inject] private readonly LevelSceneData _levelSceneData;
 		[Inject] private readonly LifetimeScope _parentScope;
 
 		[Inject] private readonly AsyncSpawnersFactory<AssetReferenceSpawnResource, ISpawnResourceProvider<AssetReferenceSpawnResource>> _spawnersFactory;
 		[Inject] private readonly SpawnablePlayerSettings _spawnablePlayerSettings;
+		
+		private LifetimeScope _playerLifetimeScope;
 
 		async UniTask IAsyncStartable.StartAsync(CancellationToken cancellation)
 		{
@@ -33,7 +36,7 @@ namespace DefendTheWave.Player
 
 			using (LifetimeScope.EnqueueParent(_parentScope))
 			{
-				LifetimeScope.Create(CreatePlayerScope);
+				_playerLifetimeScope = LifetimeScope.Create(CreatePlayerScope);
 			}
 			
 			void CreatePlayerScope(IContainerBuilder builder)
@@ -50,8 +53,13 @@ namespace DefendTheWave.Player
 				builder.Register<PlayerContainer>(Lifetime.Scoped).AsSelf().WithParameter(player);
 
 				builder.Register<PlayerHealthModel>(Lifetime.Scoped).AsSelf();
-				builder.Register<PlayerHealthController>(Lifetime.Scoped).AsSelf();
+				builder.Register<PlayerHealthController>(Lifetime.Scoped).AsSelf().AsImplementedInterfaces();
 			}
+		}
+
+		void IGameEndedHandler.HandleGameEnded()
+		{
+			_playerLifetimeScope.Dispose();
 		}
 	}
 }

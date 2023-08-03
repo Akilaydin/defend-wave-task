@@ -56,7 +56,13 @@ namespace DefendTheWave.Common.Services.Spawn
 				
 				foreach (var operation in _handles)
 				{
-					disposeTasks.Enqueue(UniTask.WaitUntil(() => operation.IsDone).ContinueWith(() => Addressables.Release(operation)));
+					disposeTasks.Enqueue(UniTask.WaitUntil(() => operation.IsDone).ContinueWith(() =>
+					{
+						if (operation.IsValid())
+						{
+							Addressables.Release(operation);
+						}
+					}));
 				}
 
 				_handles.Clear();

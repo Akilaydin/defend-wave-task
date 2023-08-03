@@ -11,6 +11,10 @@ namespace DefendTheWave.Common
 		void IDisposable.Dispose()
 		{
 			CompositeDisposable.Dispose();
+			
+			OnDispose();
 		}
+
+		protected virtual void OnDispose() { }
 	}
 }

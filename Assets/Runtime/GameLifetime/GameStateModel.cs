@@ -1,16 +1,19 @@
 ﻿using Cysharp.Threading.Tasks;
 
+using DefendTheWave.GameLifetime.Interfaces;
+
 namespace DefendTheWave.GameLifetime
 {
-	public class GameStateModel
+	public class GameStateModel : IGameStateProvider, IGameStateChanger
 	{
-		public IReadOnlyAsyncReactiveProperty<GameState> CurrentGameState => _currentGameState;
+		IReadOnlyAsyncReactiveProperty<GameState> IGameStateProvider.CurrentGameState => _currentGameState;
 
 		private AsyncReactiveProperty<GameState> _currentGameState = new(GameState.Entry);
 
-		public void ChangeGameState(GameState newState)
+		void IGameStateChanger.ChangeGameState(GameState newState)
 		{
 			_currentGameState.Value = newState;
 		}
 	}
+
 }

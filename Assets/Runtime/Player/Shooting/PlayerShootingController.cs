@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 
@@ -10,6 +11,8 @@ using DefendTheWave.Common.Services.Spawn.Pooling;
 using DefendTheWave.Common.Services.Spawn.Pooling.AddressablesPooling;
 using DefendTheWave.Data;
 using DefendTheWave.Data.Settings;
+using DefendTheWave.GameLifetime;
+using DefendTheWave.GameLifetime.Interfaces;
 
 using DG.Tweening;
 
@@ -34,14 +37,17 @@ namespace DefendTheWave.Player.Shooting
 		[Inject] private readonly PlayerContainer _playerContainer;
 		[Inject] private readonly LevelSceneData _sceneData;
 		[Inject] private readonly SpawnableBulletSettings _spawnableBulletSettings;
+		[Inject] private readonly IGameStateProvider _gameStateProvider;
+		[Inject] private readonly IGameEventsInvoker _gameEventsInvoker;
 
+		private List<Tween> _bulletMovementTweens = new(PreloadedBulletsCount);
 		private PlayerView _player;
-		
+		private AddressablePool _addressablePool;
+
 		private Bounds _screenBounds;
 		private float _projectileSpeed;
 		private float _blastRadius;
 		private int _enemiesLayer;
-		private AddressablePool _addressablePool;
 
 		void IStartable.Start()
 		{
@@ -61,7 +67,18 @@ namespace DefendTheWave.Player.Shooting
 		{
 			await _addressablePool.Preload(PreloadedBulletsCount);
 		}
-		
+
+		protected override void OnDispose()
+		{
+			foreach (var bulletMovementTween in _bulletMovementTweens)
+			{
+				if (bulletMovementTween.IsActive())
+				{
+					bulletMovementTween.Kill();
+				}
+			}
+		}
+
 		private void CachePlayer(PlayerView playerView)
 		{
 			_player = playerView;
@@ -73,9 +90,10 @@ namespace DefendTheWave.Player.Shooting
 		{
 			if (EnemyInBlastRange(out var closestEnemyPosition))
 			{
-				var bullet = _addressablePool.Get();
-
-				var bulletTransform = bullet.Instance.transform;
+				var spawnedBullet = _addressablePool.Get();
+                
+				
+				var bulletTransform = spawnedBullet.Instance.transform;
 				
 				bulletTransform.SetParent(_sceneData.BulletsSpawnRoot); 
 
@@ -83,11 +101,22 @@ namespace DefendTheWave.Player.Shooting
 
 				var direction = closestEnemyPosition - (Vector2) bulletTransform.position;
 
-				bulletTransform.transform.DOMove(direction.normalized * _blastRadius * BulletReleaseOffsetMultiplier, _projectileSpeed)
-					.SetSpeedBased(true).OnComplete(() =>
+				var tween = bulletTransform.transform
+					.DOMove(direction.normalized * _blastRadius * BulletReleaseOffsetMultiplier, _projectileSpeed)
+					.SetSpeedBased(true);
+				
+				_bulletMovementTweens.Add(tween);
+
+				spawnedBullet.Instance.GetComponent<BulletView>().HitEnemy += DisposeBullet;
+
+				tween.OnComplete(DisposeBullet);
+
+				void DisposeBullet()
 				{
-					_addressablePool.Return(bullet);
-				});
+					_bulletMovementTweens.Remove(tween);
+					
+					spawnedBullet.Dispose();
+				}
 			}
 		}
 #pragma warning restore CS4014
@@ -111,15 +140,29 @@ namespace DefendTheWave.Player.Shooting
 				
 				return true;
 			}
-			
-			closestEnemyPosition = results.Select(result => GetClosest(result.transform.position, _player.transform.position)).Min();
-			
-			return true;
 
-			Vector2 GetClosest(Vector2 v1, Vector2 v2)
+			float minDistance = Mathf.Infinity;
+			
+			foreach (var result in results)
 			{
-				return Vector2.Distance(v1, v2) >= Vector2.Distance(v2, v1) ? v1 : v2;
+				if (result.transform == null)
+				{
+					continue;
+				}
+
+				var currentDistance = Vector2.Distance(_player.transform.position, result.transform.position);
+				
+				if (minDistance < Vector2.Distance(_player.transform.position, result.transform.position))
+				{
+					continue;
+				}
+
+				minDistance = currentDistance;
+
+				closestEnemyPosition = result.transform.position;
 			}
+
+			return true;
 		}
 	}
 }
