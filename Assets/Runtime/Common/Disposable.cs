@@ -1,7 +1,5 @@
 ﻿using System;
 
-using OriGames.Extensions.Disposable;
-
 namespace DefendTheWave.Common
 {
 	public class Disposable : IDisposable

@@ -9,8 +9,6 @@ using DefendTheWave.GameLifetime;
 using DefendTheWave.GameLifetime.Interfaces;
 using DefendTheWave.GUI.Views;
 
-using OriGames.Extensions.Disposable;
-
 using VContainer;
 using VContainer.Unity;
 
